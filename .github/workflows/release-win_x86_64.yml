@@ -1,0 +1,29 @@
+name: release windows x86_64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: release windows x86_64
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build
+        run: cargo build --release --bin sonogram --features=build-binary
+
+      - name: Archive sonogram
+        run: Compress-Archive -Path target/ -DestinationPath C:\Users\runneradmin\sonogram_x86_64_msvc_windows.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonogram_x86_64_msvc_windows.zip
+          path: C:\Users\runneradmin\sonogram_x86_64_msvc_windows.zip
