@@ -16,7 +16,7 @@ plots are common names of similar things.
 ## Build and run the command line appplication
 
 ```sh
-cargo build --release --bin sonogram --features=build-binary
+cargo build --release
 
 ./target/release/sonogram --wav samples/trumpet.wav --png output.png
 ```
@@ -66,6 +66,23 @@ Or use a built-in colour gradient theme:
 ```Rust
 let mut gradient = ColourGradient::rainbow_theme();
 spec_builder.set_gradient(gradient);
+```
+
+## Build
+
+You need: cargo, rustc, cross, podman, goreleaser.
+
+0. build images and increase resources for podman:
+
+```shell
+podman build --platform=linux/amd64 -f dockerfiles/Dockerfile.aarch64-unknown-linux-gnu -t aarch64-unknown-linux-gnu:my-edge .
+podman build --platform=linux/amd64 -f dockerfiles/Dockerfile.x86_64-unknown-linux-gnu -t x86_64-unknown-linux-gnu:my-edge .
+```
+
+1. make binaries:
+
+```shell
+goreleaser build --clean --snapshot --id sonogram --timeout 60m
 ```
 
 ## License

@@ -1,0 +1,29 @@
+version: 2
+
+project_name: sonogram
+
+before:
+  hooks:
+    - rustup default stable
+    - cargo fetch --locked
+
+env:
+  - CROSS_CONTAINER_ENGINE=podman
+  - CROSS_CONTAINER_OPTS=--platform=linux/amd64
+
+builds:
+  - builder: rust
+    id: sonogram
+    command: build
+    tool: cross
+    targets:
+      - x86_64-unknown-linux-gnu
+      - aarch64-unknown-linux-gnu
+      - x86_64-apple-darwin
+      - aarch64-apple-darwin
+
+universal_binaries:
+  - replace: false
+
+source:
+  enabled: false

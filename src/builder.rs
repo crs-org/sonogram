@@ -16,7 +16,6 @@
  */
 
 use std::f32;
-#[cfg(feature = "png")]
 use std::path::Path;
 
 use crate::errors::SonogramError;
@@ -84,7 +83,6 @@ impl SpecOptionsBuilder {
     ///
     ///  * `fname` - The path to the file.
     ///
-    #[cfg(feature = "hound")]
     pub fn load_data_from_file(self, fname: &Path) -> Result<Self, SonogramError> {
         let mut reader = hound::WavReader::open(fname)?;
 

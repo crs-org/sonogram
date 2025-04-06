@@ -1,0 +1,32 @@
+name: release windows aarch64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: release windows aarch64
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: add aarch64-pc-windows-msvc target
+        run: rustup target add aarch64-pc-windows-msvc
+
+      - name: Build
+        run: cargo build --target aarch64-pc-windows-msvc --release
+
+      - name: Archive sonogram
+        run: Compress-Archive -Path target/aarch64-pc-windows-msvc/release/sonogram.exe -DestinationPath C:\Users\runneradmin\sonogram_aarch64_msvc_windows.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonogram_aarch64_msvc_windows.zip
+          path: C:\Users\runneradmin\sonogram_aarch64_msvc_windows.zip

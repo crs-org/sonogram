@@ -19,18 +19,17 @@ extern crate sonogram;
 
 use std::{fs::File, io::BufWriter, path::PathBuf};
 
-use clap::{ArgEnum, Parser};
-use png::HasParameters;
+use clap::{Parser, ValueEnum};
 use sonogram::{ColourGradient, ColourTheme, FrequencyScale, SpecOptionsBuilder};
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum WinFunc {
     BlackmanHarris,
     Rectangular,
     Hann,
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum ArgColourTheme {
     Default,
     Audacity,
@@ -59,7 +58,7 @@ struct Args {
     // INPUT options
     //
     /// The .wav file to process
-    #[clap(long, parse(from_os_str), value_name = "FILE")]
+    #[clap(long, value_parser, value_name = "FILE")]
     wav: PathBuf,
 
     /// The audio channel to use
@@ -78,11 +77,11 @@ struct Args {
     bins: usize,
 
     /// The windowing function to use
-    #[clap(arg_enum, long, default_value_t = WinFunc::Hann)]
+    #[clap(value_enum, long, default_value_t = WinFunc::Hann)]
     window_fn: WinFunc,
 
     /// The type of scale to use for frequency
-    #[clap(long, default_value_t = String::from("linear"), value_name = "TYPE", possible_values=&["linear", "log"])]
+    #[clap(long, default_value_t = String::from("linear"), value_name = "TYPE", value_parser = clap::builder::PossibleValuesParser::new(["linear", "log"]))]
     freq_scale: String,
 
     /// The number of samples to step for each window, zero mean default
@@ -92,15 +91,15 @@ struct Args {
     // Output
     //
     /// The output PNG file
-    #[clap(long, parse(from_os_str), value_name = "FILE")]
+    #[clap(long, value_parser, value_name = "FILE")]
     png: Option<PathBuf>,
 
     /// Output the gradient legend to a PNG file
-    #[clap(long, parse(from_os_str), value_name = "FILE")]
+    #[clap(long, value_parser, value_name = "FILE")]
     legend: Option<PathBuf>,
 
     /// The output CSV file
-    #[clap(long, parse(from_os_str), value_name = "FILE")]
+    #[clap(long, value_parser, value_name = "FILE")]
     csv: Option<PathBuf>,
 
     /// The width of the output image in pixels
@@ -112,7 +111,7 @@ struct Args {
     height: usize,
 
     /// The colour gradient to implement
-    #[clap(arg_enum, long, default_value_t = ArgColourTheme::Default, value_name = "GRADIENT")]
+    #[clap(value_enum, long, default_value_t = ArgColourTheme::Default, value_name = "GRADIENT")]
     gradient: ArgColourTheme,
 }
 
@@ -211,7 +210,8 @@ fn main() {
         let file = File::create(&args.legend.unwrap()).unwrap();
         let buf = &mut BufWriter::new(file);
         let mut encoder = png::Encoder::new(buf, width as u32, height as u32);
-        encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
+        encoder.set_color(png::ColorType::Rgba);
+        encoder.set_depth(png::BitDepth::Eight);
         let mut writer = encoder.write_header().unwrap();
         writer.write_image_data(&img).unwrap(); // Save
     }
