@@ -15,7 +15,6 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-extern crate clap;
 extern crate sonogram;
 
 use std::{fs::File, io::BufWriter, path::PathBuf};

@@ -43,9 +43,6 @@ use resize::Pixel::GrayF32;
 use resize::Type::Lanczos3;
 use rgb::FromSlice;
 
-#[cfg(feature = "png")]
-use png::HasParameters; // To use encoder.set()
-
 pub struct Spectrogram {
     spec: Vec<f32>,
     width: usize,
@@ -81,7 +78,8 @@ impl Spectrogram {
         let file = File::create(fname)?;
         let w = &mut BufWriter::new(file);
         let mut encoder = png::Encoder::new(w, w_img as u32, h_img as u32);
-        encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
+        encoder.set_color(png::ColorType::Rgba);
+        encoder.set_depth(png::BitDepth::Eight);
         let mut writer = encoder.write_header()?;
         writer.write_image_data(&img)?; // Save
 
@@ -113,7 +111,8 @@ impl Spectrogram {
 
         let mut pngbuf: Vec<u8> = Vec::new();
         let mut encoder = png::Encoder::new(&mut pngbuf, w_img as u32, h_img as u32);
-        encoder.set(png::ColorType::RGBA).set(png::BitDepth::Eight);
+        encoder.set_color(png::ColorType::Rgba);
+        encoder.set_depth(png::BitDepth::Eight);
         let mut writer = encoder.write_header()?;
         writer.write_image_data(&img)?;
 
