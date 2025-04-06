@@ -1,5 +1,9 @@
 # Sonogram
 
+[![build](https://github.com/crs-org/sonogram/actions/workflows/ci.yml/badge.svg)](https://github.com/crs-org/sonogram/actions/workflows/ci.yml)
+[![release windows aarch64](https://github.com/crs-org/sonogram/actions/workflows/release-win_aarch64.yml/badge.svg)](https://github.com/crs-org/sonogram/actions/workflows/release-win_aarch64.yml)
+[![release windows x86_64](https://github.com/crs-org/sonogram/actions/workflows/release-win_x86_64.yml/badge.svg)](https://github.com/crs-org/sonogram/actions/workflows/release-win_x86_64.yml)
+
 Create a sonogram\* from an wave form, or importing a `.wav` file.
 
 The spectrogram can be saved as a `.png` file, a `.csv` file, or
